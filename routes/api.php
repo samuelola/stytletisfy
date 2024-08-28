@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MultipleImagesController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CountCartController;
+use App\Http\Controllers\Api\WishlistController;
+
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -35,6 +37,7 @@ Route::group([
     Route::apiResource('multiple_images',MultipleImagesController::class)->middleware('auth:api');
     Route::apiResource('cart',CartController::class);
     Route::get('count-cart/{cart_id}/{user_id}',[CountCartController::class,'cartdetails']);
+    Route::apiResource('wishlist',WishlistController::class);
 });
 
 //  Route::apiResource('categories',CategoryController::class);

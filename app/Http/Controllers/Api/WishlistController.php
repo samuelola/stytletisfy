@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\CartShowResource;
-use App\Models\Cart;
+use App\Models\Wishlist;
 use App\Library\Utilities;
+use App\Http\Resources\WishlistResource;
 
-class CartController extends Controller
+class WishlistController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        
+        //
     }
 
     /**
@@ -35,9 +35,9 @@ class CartController extends Controller
         $product_id = $request->product_id;
         $qty        = 1;
         $price      = $request->price;
-        $basket = Cart::where('user_id',$current_user)->where('product_id',$product_id)->first();
+        $basket = Wishlist::where('user_id',$current_user)->where('product_id',$product_id)->first();
         if(!$basket){
-           Cart::create([
+           Wishlist::create([
                "user_id"=>$current_user,
                "product_id" => $product_id,
                "qty"  => $qty,
@@ -51,8 +51,7 @@ class CartController extends Controller
            $basket->save();  
         }
 
-        $basket_count = Cart::where('user_id',$current_user)->sum('qty');
-        return Utilities::sendResponse($basket_count,"Successfully added to cart");
+        return Utilities::sendResponse($basket,"Successfully added to wishlist");
     }
 
     /**
@@ -60,8 +59,8 @@ class CartController extends Controller
      */
     public function show(string $id)
     {
-        $user_cart = Cart::where('user_id',$id)->get();
-        return Utilities::sendResponse(CartShowResource::collection($user_cart),"Retrieved Successfully");
+        $user_wishlist = Wishlist::where('user_id',$id)->get();
+        return Utilities::sendResponse(WishlistResource::collection($user_wishlist),"Retrieved Successfully");
     }
 
     /**
@@ -77,11 +76,11 @@ class CartController extends Controller
      */
     public function update(Request $request, string $id)
     {
-         $cart = Cart::find($id);
+         $cart = Wishlist::find($id);
          $cart->qty = $request->qty;
          $cart->price = $request->totalprice;
          $cart->save();
-         return Utilities::sendResponse($cart,"Cart_updated");
+         return Utilities::sendResponse($cart,"Wishlist updated");
     }
 
     /**
@@ -90,8 +89,8 @@ class CartController extends Controller
     public function destroy(Request $request,string $id)
     {
         $user_id = $request->user_id;
-        $get_cart = Cart::where('id',$id)->delete();
-        $basket_count = Cart::where('user_id',$user_id)->sum('qty');
-        return Utilities::sendResponse($basket_count,"basket_count");
+        $get_cart = Wishlist::where('id',$id)->delete();
+        $basket_count = Wishlist::where('user_id',$user_id)->sum('qty');
+        return Utilities::sendResponse([],"Wishlist item is removed");
     }
 }

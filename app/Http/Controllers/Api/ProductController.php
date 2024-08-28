@@ -43,7 +43,6 @@ class ProductController extends Controller
             $location=public_path('images/'.$path);
             Image::read($image)->resize(800, 900)->save($location);
         
-            
         }
 
         $newProduct = new Product;
