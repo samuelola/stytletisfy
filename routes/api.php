@@ -27,18 +27,22 @@ Route::group([
     Route::post('signin', [AuthController::class,'signin']);
     Route::post('logout', [AuthController::class,'logout']);
     Route::post('refresh', [AuthController::class,'refresh']);
-    Route::get('user', [AuthController::class,'user'])->middleware('auth:api');
-    Route::apiResource('products',ProductController::class);
-    Route::apiResource('categories',CategoryController::class)->middleware('auth:api');
-    Route::apiResource('subcategories',SubCategoryController::class)->middleware('auth:api');
-    // Route::apiResource('categories',CategoryController::class);
-    // Route::apiResource('subcategories',SubCategoryController::class);
-    Route::apiResource('users',UserController::class)->middleware('auth:api');
-    Route::apiResource('multiple_images',MultipleImagesController::class)->middleware('auth:api');
+    //Route::get('user', [AuthController::class,'user'])->middleware('auth:api');
+    Route::get('user', [AuthController::class,'user']);
+
+ Route::group(['middleware','auth:api'],function(){
+    Route::apiResource('products',ProductController::class)->only(['index','show']);
+    Route::apiResource('categories',CategoryController::class)->only(['index']);
+    Route::apiResource('subcategories',SubCategoryController::class)->only(['index']);
+    //Route::apiResource('users',UserController::class)->middleware('auth:api');
+    Route::apiResource('users',UserController::class);
+    Route::apiResource('multiple_images',MultipleImagesController::class);
     Route::apiResource('cart',CartController::class);
     Route::get('count-cart/{cart_id}/{user_id}',[CountCartController::class,'cartdetails']);
     Route::apiResource('wishlist',WishlistController::class);
+
+ });   
+    
 });
 
-//  Route::apiResource('categories',CategoryController::class);
-//     Route::apiResource('subcategories',SubCategoryController::class);
+
