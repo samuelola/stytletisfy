@@ -26,8 +26,9 @@ class SignupRequest extends FormRequest
              
               'name'=>'required|string',
               'email'=>'required|string|unique:users|max:255',
-              'password'=>'min:6|required_with:password_confirmation|same:password_confirmation',
-              'password_confirmation' => 'min:6',
+              'password'=>'required|min:6|confirmed',
+              'password_confirmation' => 'required|min:6',
+              'role_id'  => 'required'
         ];
     }
 
@@ -37,7 +38,9 @@ class SignupRequest extends FormRequest
             'name.required' => 'Name is required',
             'name.min' => 'Name must not be less than 3 characters.',
             "email.required" => "Email is required",
+            "role_id.required" => "Role Id is required",
             "email.unique" => "Email is already taken",
+            "password.required" => "Password is required",
             "password.min" => "Password must not be less than 6 characters.",
             "password_confirmed.required" => "Confirm your password"
         ];

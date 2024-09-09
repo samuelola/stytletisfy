@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Library\Utilities;
 use App\Http\Requests\SignupRequest;
 use App\Http\Requests\SigninRequest;
+use App\Models\Vendor;
 
 
 class AuthController extends Controller
@@ -23,7 +24,13 @@ class AuthController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->password = $data['password'];
+        $user->role_id = $data['role_id'];
         $user->save();
+        
+        if($user->role->name == 'Vendor'){
+           $vendor = Vendor::create(['name'=>$request->name]); 
+           $vendor->users()->attach($user->id);  
+        }
 
         return Utilities::sendResponse($user,"Registration is Successful");
 

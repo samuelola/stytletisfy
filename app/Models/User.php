@@ -58,18 +58,20 @@ class User extends Authenticatable implements JWTSubject
     }
 
      public function kyc(){
-
         return $this->hasOne(KYC::class);
     }
 
     public function product(){
-
         return $this->hasMany(Product::class);
     }
 
     public function role(){
 
         return $this->belongsTo(Role::class);
+    }
+
+    public function vendors(){
+        return $this->belongsToMany(Vendor::class);
     }
 
 

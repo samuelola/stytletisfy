@@ -31,7 +31,6 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $product_data = $request->validated();
-
         if($request->hasFile('image')){
             // without package
             // $path = time().'.'.$request->image->extension();
