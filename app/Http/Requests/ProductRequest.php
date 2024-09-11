@@ -31,6 +31,7 @@ class ProductRequest extends FormRequest
                'stock_status'  => 'required',
                'category_id' => 'required|numeric',
                'sub_category_id' => 'required|numeric',
+               'brand'          => 'required'
         ];
     }
 

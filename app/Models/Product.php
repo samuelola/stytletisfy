@@ -19,7 +19,8 @@ class Product extends Model
         'uuid',
         'stock_qty',
         'stock_status',
-        'vendor_id'
+        'vendor_id',
+        'brand'
     ];
     
     public function user(){

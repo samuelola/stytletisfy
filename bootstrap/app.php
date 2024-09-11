@@ -6,6 +6,9 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -32,6 +35,20 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json([
                 'message' => $e->getMessage()
             ], 404);
+        }
+        });
+
+        $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
+        if ($request->is('api/*')) {
+            return response()->json([
+                'message' => "Something went wrong check your Method and your route"
+            ], 404);
+        }
+        });
+
+        $exceptions->render(function (QueryException $e, Request $request) {
+        if ($request->is('api/*')) {
+           return response()->json(['error'=>'Something went wrong check your query or input'],422);
         }
         });
 
