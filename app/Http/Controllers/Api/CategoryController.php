@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Http\Resources\CategoryResource;
 use App\Library\Utilities;
+use App\Models\SubCategory;
+use Intervention\Image\Laravel\Facades\Image;
+use App\Http\Requests\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -40,7 +43,11 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $find_subcat = SubCategory::where('category_id',$id)->orderByDesc('created_at')->get();
+        if (is_null($find_subcat)) {
+            return Utilities::sendError('Subcategory not found.');
+        }
+        return Utilities::sendResponse($find_subcat, 'Subcategory retrieved successfully.');
     }
 
     /**
@@ -56,7 +63,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        
     }
 
     /**

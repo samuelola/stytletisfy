@@ -89,17 +89,12 @@ class ProductController extends Controller
 
               $product_data = $request->validated();
               if($request->hasFile('image')){
-                 
-                   $logo = $request->image;
-                   $filename = time().'.'.$logo->getClientOriginalName();
-                   $path = $logo->storeAs('images',$filename,'public');
-                   
-                //   $path = time().'.'.$request->image->extension();
-                //   $request->image->move(public_path('images'),$path);
 
-                  
-                  $product_data['image'] = $path;
-                  
+                  $image=$request->file('image');
+                  $path = time().'.'.$request->image->extension();
+                  $location=public_path('images/'.$path);
+                  Image::read($image)->resize(800, 900)->save($location);
+                  $product_data['image'] = $location;
                   $find_product->update($product_data);
 
               }else{

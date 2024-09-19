@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\CountCartController;
 use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\Api\CompareController;
+use App\Http\Controllers\Api\UploadCategoryImagesController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -32,9 +33,6 @@ Route::group([
     Route::get('user', [AuthController::class,'user']);
 
  Route::group(['middleware','auth:api'],function(){
-    Route::apiResource('products',ProductController::class)->only(['index','show']);
-    Route::apiResource('categories',CategoryController::class)->only(['index']);
-    Route::apiResource('subcategories',SubCategoryController::class)->only(['index']);
     //Route::apiResource('users',UserController::class)->middleware('auth:api');
     Route::apiResource('users',UserController::class);
     Route::apiResource('multiple_images',MultipleImagesController::class);
@@ -43,7 +41,15 @@ Route::group([
     Route::apiResource('wishlist',WishlistController::class);
     Route::apiResource('vendor',VendorController::class);
     Route::apiResource('compare',CompareController::class);
- });   
+ });  
+ 
+    Route::apiResource('products',ProductController::class);
+    Route::apiResource('categories',CategoryController::class);
+    Route::apiResource('subcategories',SubCategoryController::class);
+    Route::post('catimage/{id}', [UploadCategoryImagesController::class,'uploadcatImage']);
+    Route::post('catmonthimage/{id}', [UploadCategoryImagesController::class,'uploadcatMonthImage']);
+    Route::get('catmonthimage', [UploadCategoryImagesController::class,'getcatMonthImage']);
+    Route::post('prodcatimage/{id}', [UploadCategoryImagesController::class,'uploadProductImage']);
     
 });
 

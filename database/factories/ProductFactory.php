@@ -22,7 +22,8 @@ class ProductFactory extends Factory
          $availability = [
         'available',
         'not available', 
-    ];
+        ];
+        
         return [
             'title' => fake()->words(6, true),
             'description'=> fake()->text(),
@@ -39,7 +40,8 @@ class ProductFactory extends Factory
             'sku' => 'S'.random_int(100000,999999),
             'reviews'=> fake()->text(),
             'products_multiple_image_id' => random_int(1,100),
-            'offer_date' => Carbon::instance(fake()->dateTimeBetween('-1 months','+1 months')) 
+            'offer_date' => Carbon::instance(fake()->dateTimeBetween('-1 months','+1 months')),
+            
         ];
     }
 }

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SubCategory;
 use App\Http\Resources\SubCategoryResource;
+use App\Http\Resources\ProductResource;
 use App\Library\Utilities;
+use App\Models\Product;
 
 class SubCategoryController extends Controller
 {
@@ -40,7 +42,11 @@ class SubCategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $find_product = Product::where('sub_category_id',$id)->orderByDesc('created_at')->get();
+        if (is_null($find_product)) {
+            return Utilities::sendError('Product not found.');
+        }
+        return Utilities::sendResponse($find_product, 'Product retrieved successfully.');
     }
 
     /**
