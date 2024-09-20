@@ -26,7 +26,6 @@ class ProductRequest extends FormRequest
                'description' => 'required',
                'image' => 'required|image|mimes:jpg,jpeg,png,svg,jfif|max:2048',
                'price' => 'required|numeric',
-               'user_id' => 'required',
                'stock_qty'  => 'required|numeric',
                'stock_status'  => 'required',
                'category_id' => 'required|numeric',

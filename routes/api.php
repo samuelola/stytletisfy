@@ -32,8 +32,10 @@ Route::group([
     //Route::get('user', [AuthController::class,'user'])->middleware('auth:api');
     Route::get('user', [AuthController::class,'user']);
 
- Route::group(['middleware','auth:api'],function(){
-    //Route::apiResource('users',UserController::class)->middleware('auth:api');
+
+ 
+ Route::middleware(['auth:api'])->group(function (){
+
     Route::apiResource('users',UserController::class);
     Route::apiResource('multiple_images',MultipleImagesController::class);
     Route::apiResource('cart',CartController::class);
@@ -41,9 +43,11 @@ Route::group([
     Route::apiResource('wishlist',WishlistController::class);
     Route::apiResource('vendor',VendorController::class);
     Route::apiResource('compare',CompareController::class);
- });  
- 
     Route::apiResource('products',ProductController::class);
+ });
+    
+    Route::get('products',[ProductController::class,'index']);
+    Route::get('products/{product}',[ProductController::class,'show']);
     Route::apiResource('categories',CategoryController::class);
     Route::apiResource('subcategories',SubCategoryController::class);
     Route::post('catimage/{id}', [UploadCategoryImagesController::class,'uploadcatImage']);

@@ -37,7 +37,11 @@ class Product extends Model
         return $this->hasMany(MultipleImage::class,'products_multiple_image_id');
     }
 
-    public function vendors(){
-        return $this->hasMany(Vendor::class);
+    public function vendor(){
+        return $this->belongsTo(Vendor::class);
     }
+
+    // public function vendors(){
+    //     return $this->hasMany(Vendor::class);
+    // }
 }

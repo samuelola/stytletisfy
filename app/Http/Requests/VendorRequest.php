@@ -27,7 +27,6 @@ class VendorRequest extends FormRequest
               'business_name' => 'required|string',
               'business_description' => 'required|string',
               'corperate_type' => 'required|string',
-              
                  
         ];
     }

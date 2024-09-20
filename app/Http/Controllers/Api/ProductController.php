@@ -12,6 +12,7 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\Auth;
 
 
 class ProductController extends Controller
@@ -30,8 +31,10 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $product_data = $request->validated();
-        if($request->hasFile('image')){
+        $user = User::find(Auth::user()->id);
+        foreach($user->vendors as $vendor){
+            $product_data = $request->validated();
+            if($request->hasFile('image')){
             // without package
             // $path = time().'.'.$request->image->extension();
             // $request->image->move(public_path('images'),$path);
@@ -41,25 +44,24 @@ class ProductController extends Controller
             $path = time().'.'.$request->image->extension();
             $location=public_path('images/'.$path);
             Image::read($image)->resize(800, 900)->save($location);
-        
+            }
+
+            $newProduct = new Product;
+            $newProduct->title = $product_data['title'];
+            $newProduct->description = $product_data['description'];
+            $newProduct->price = $product_data['price'];
+            $newProduct->image = 'images/'.$path;
+            $newProduct->user_id = auth()->user()->id;
+            $newProduct->uuid = Str::uuid();
+            $newProduct->stock_qty = $product_data['stock_qty'];
+            $newProduct->stock_status = $product_data['stock_status'];
+            $newProduct->category_id = $product_data['category_id'];
+            $newProduct->sub_category_id = $product_data['sub_category_id'];
+            $newProduct->vendor_id = $vendor->id;
+            $newProduct->save();
+            return Utilities::sendResponse(new ProductResource($newProduct), 'Product saved successfully.');
         }
-
-        $newProduct = new Product;
-        $newProduct->title = $product_data['title'];
-        $newProduct->description = $product_data['description'];
-        $newProduct->price = $product_data['price'];
-        $newProduct->image = 'images/'.$path;
-        //$newProduct->user_id = auth()->user()->id;
-        $newProduct->user_id = $product_data['user_id'];
-        $newProduct->uuid = Str::uuid();
-        $newProduct->stock_qty = $product_data['stock_qty'];
-        $newProduct->stock_status = $product_data['stock_status'];
-        $newProduct->category_id = $product_data['category_id'];
-        $newProduct->sub_category_id = $product_data['sub_category_id'];
-        $newProduct->save();
-
-        return Utilities::sendResponse(new ProductResource($newProduct), 'Product saved successfully.');
-
+        
     }
 
     /**
@@ -82,14 +84,11 @@ class ProductController extends Controller
     public function update(ProductUpdateRequest $request, string $id)
     {     
           $find_product = Product::where('id',$id)->orderByDesc('created_at')->first();
-
           if (is_null($find_product)) {
             return Utilities::sendError('Product not found.');
           }else{
-
               $product_data = $request->validated();
               if($request->hasFile('image')){
-
                   $image=$request->file('image');
                   $path = time().'.'.$request->image->extension();
                   $location=public_path('images/'.$path);
