@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CartShowResource;
 use App\Models\Cart;
 use App\Library\Utilities;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -31,7 +32,7 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        $current_user = $request->user_id;
+        $current_user = Auth::user()->id;
         $product_id = $request->product_id;
         $qty        = 1;
         $price      = $request->price;
@@ -61,7 +62,12 @@ class CartController extends Controller
     public function show(string $id)
     {
         $user_cart = Cart::where('user_id',$id)->get();
-        return Utilities::sendResponse(CartShowResource::collection($user_cart),"Retrieved Successfully");
+        if (count($user_cart) == 0) {
+            return Utilities::sendError('User Product not found.');
+        }else{
+          return Utilities::sendResponse(CartShowResource::collection($user_cart),"Retrieved Successfully");
+        }
+        
     }
 
     /**
@@ -77,11 +83,19 @@ class CartController extends Controller
      */
     public function update(Request $request, string $id)
     {
-         $cart = Cart::find($id);
-         $cart->qty = $request->qty;
-         $cart->price = $request->totalprice;
-         $cart->save();
-         return Utilities::sendResponse($cart,"Cart_updated");
+        $validated = $request->validate([
+           'qty'=> 'required',
+           'price' => 'required'
+
+        ]);
+        $cart = Cart::where('id',$id)->first();
+        if (is_null($cart)) {
+            return response()->json('Cart not found.');
+        }else{
+            $cart->update($validated);
+            return Utilities::sendResponse($cart,"Cart_updated");
+        }
+         
     }
 
     /**
@@ -92,6 +106,6 @@ class CartController extends Controller
         $user_id = $request->user_id;
         $get_cart = Cart::where('id',$id)->delete();
         $basket_count = Cart::where('user_id',$user_id)->sum('qty');
-        return Utilities::sendResponse($basket_count,"basket_count");
+        return Utilities::sendResponse($basket_count,"cart_count");
     }
 }

@@ -18,7 +18,8 @@ class ProductResource extends JsonResource
         return [
             "id" => $this->id,
             "uuid" => $this->uuid,
-            "title" => $this->description,
+            "title" => $this->title,
+            "description" => $this->description,
             "image" => $this->image,
             "price" => $this->price,
             "size"  => $this->size,
@@ -28,7 +29,8 @@ class ProductResource extends JsonResource
             "stock_status" => $this->stock_status,
             // "product_rating" => $this->product_rating,
             "created_at"     => $this->created_at,
-            "user"           => new ProductUserResource($this->user),
+            // "user"           => new ProductUserResource($this->user),
+            'vendor'           => new VendorUserResource($this->vendor),
             "subcategory"    => new ProductSubCategoryResource($this->subcategory),
         ];
     }
