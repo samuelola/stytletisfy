@@ -24,7 +24,6 @@ class UploadCategoryImagesController extends Controller
 
               $category_data = $request->validated();
               if($request->hasFile('image')){
-
                   $image=$request->file('image');
                   $path = time().'.'.$request->image->extension();
                   $location=public_path('category_images/'.$path);
